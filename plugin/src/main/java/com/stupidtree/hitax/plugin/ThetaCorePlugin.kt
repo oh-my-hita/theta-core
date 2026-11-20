@@ -12,6 +12,7 @@ import com.stupidtree.hita.api.ThetaArticle
 import com.stupidtree.hita.api.ThetaService
 import com.stupidtree.hita.api.ThetaTopic
 import com.stupidtree.hita.theta.data.repository.TopicRepository
+import com.stupidtree.hita.theta.data.source.web.ArticleWebSource
 
 /** T1 theta topic core. Article/comment data remains in the legacy module. */
 class ThetaCorePlugin : Plugin {
@@ -39,6 +40,10 @@ private class ThetaImpl(application: Application) : ThetaService {
             else DataState(state.data.orEmpty().map { ThetaTopic(it.id, it.name, it.description, it.avatar, it.articleNum) }, DataState.STATE.SUCCESS)
         }
 
+    private val articleSource = ArticleWebSource.getInstance(application)
     override fun articles(topicId: String, page: Int): LiveData<DataState<List<ThetaArticle>>> =
-        MutableLiveData(DataState(emptyList(), DataState.STATE.SUCCESS))
+        articleSource.getArticles("", "new", 0, 0, 20, topicId).map { state ->
+            if (state.state != DataState.STATE.SUCCESS) DataState<List<ThetaArticle>>(state.state).apply { message = state.message }
+            else DataState(state.data.orEmpty().map { ThetaArticle(it.id, it.topicName ?: "", it.content, it.authorName, it.createTime.time) }, DataState.STATE.SUCCESS)
+        }
 }
