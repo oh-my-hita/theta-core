@@ -1,4 +1,4 @@
-name: Release timetable core
+name: Release theta core
 on:
   push:
     tags: ['v*']
@@ -15,11 +15,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew :plugin:buildPluginDex
       - run: |
-          cp plugin/build/plugin-dex/classes.dex timetable-core.dex
+          cp plugin/build/plugin-dex/classes.dex theta-core.dex
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" timetable-core.dex --clobber
+            gh release upload "$GITHUB_REF_NAME" theta-core.dex --clobber
           else
-            gh release create "$GITHUB_REF_NAME" timetable-core.dex --title "$GITHUB_REF_NAME" --generate-notes
+            gh release create "$GITHUB_REF_NAME" theta-core.dex --title "$GITHUB_REF_NAME" --generate-notes
           fi
         env:
           GH_TOKEN: ${{ github.token }}
