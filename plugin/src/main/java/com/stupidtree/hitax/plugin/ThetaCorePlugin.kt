@@ -9,9 +9,11 @@ import com.stupidtree.hita.api.HostEnvironmentService
 import com.stupidtree.hita.api.Plugin
 import com.stupidtree.hita.api.PluginContext
 import com.stupidtree.hita.api.ThetaArticle
+import com.stupidtree.hita.api.ThetaComment
 import com.stupidtree.hita.api.ThetaService
 import com.stupidtree.hita.api.ThetaTopic
 import com.stupidtree.hita.theta.data.repository.TopicRepository
+import com.stupidtree.hita.theta.data.repository.CommentRepository
 import com.stupidtree.hita.theta.data.source.web.ArticleWebSource
 
 /** T1 theta topic core. Article/comment data remains in the legacy module. */
@@ -41,6 +43,13 @@ private class ThetaImpl(application: Application) : ThetaService {
         }
 
     private val articleSource = ArticleWebSource.getInstance(application)
+    private val commentRepo = CommentRepository(application)
+    override fun comments(articleId: String, page: Int): LiveData<DataState<List<ThetaComment>>> =
+        commentRepo.getCommentsOfArticle("", articleId, 20, page).map { state ->
+            if (state.state != DataState.STATE.SUCCESS) DataState<List<ThetaComment>>(state.state).apply { message = state.message }
+            else DataState(state.data.orEmpty().map { ThetaComment(it.id, it.content, it.authorName, it.createTime.time) }, DataState.STATE.SUCCESS)
+        }
+
     override fun articles(topicId: String, page: Int): LiveData<DataState<List<ThetaArticle>>> =
         articleSource.getArticles("", "new", 0, 0, 20, topicId).map { state ->
             if (state.state != DataState.STATE.SUCCESS) DataState<List<ThetaArticle>>(state.state).apply { message = state.message }
