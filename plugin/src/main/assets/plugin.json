@@ -1,0 +1,9 @@
+{
+  "id": "com.stupidtree.hitax.theta",
+  "name": "社区话题核心",
+  "version": "0.1.0",
+  "apiVersion": 11,
+  "entryClass": "com.stupidtree.hitax.plugin.ThetaCorePlugin",
+  "capabilities": ["hita.theta.feed"],
+  "description": "T1 社区话题数据核心"
+}
