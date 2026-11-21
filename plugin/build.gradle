@@ -10,7 +10,7 @@ android {
     kotlinOptions { jvmTarget = '1.8' }
 }
 dependencies {
-    compileOnly 'io.github.kajimi16.ohmyhita:plugin-sdk:11'
+    compileOnly 'io.github.kajimi16.ohmyhita:plugin-sdk:11.1'
     compileOnly 'androidx.lifecycle:lifecycle-livedata-core:2.8.4'
     compileOnly 'com.google.code.gson:gson:2.8.9'
     compileOnly 'com.squareup.retrofit2:retrofit:2.4.0'

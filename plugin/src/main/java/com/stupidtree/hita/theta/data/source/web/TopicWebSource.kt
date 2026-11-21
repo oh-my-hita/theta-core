@@ -35,6 +35,7 @@ class TopicWebSource(context: Context) : BaseWebSource<TopicService>(
         return service.getTopics(
                 HttpUtils.getHeaderAuth(token), mode, pageSize, pageNum, extra
             ).map{ input ->
+            if (input == null) return@map DataState(DataState.STATE.FETCH_FAILED)
             when (input.code) {
                 SUCCESS -> return@map DataState(input.data ?: listOf())
                 codes.TOKEN_INVALID -> return@map DataState(DataState.STATE.TOKEN_INVALID)
